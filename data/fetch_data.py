@@ -26,8 +26,6 @@ pages = {
 
 html_folder = 'html'
 text_folder = 'paragraphs'
-n_words_per_short_text = 5
-
 
 if not os.path.exists(html_folder):
     os.makedirs(html_folder)
@@ -56,7 +54,6 @@ for lang, page in pages.items():
         html_content = html_file.read()
     tree = ElementTree(lxml.html.document_fromstring(html_content))
     i = 0
-    j = 0
     for p in tree.findall('//p'):
         content = p.text_content()
         if len(content) < 100:
