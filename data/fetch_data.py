@@ -7,7 +7,6 @@ from urllib.request import Request, build_opener
 
 import lxml.html
 from lxml.etree import ElementTree
-import numpy as np
 
 import codecs
 
@@ -23,12 +22,10 @@ pages = {
     'pl': 'http://pl.wikipedia.org/wiki/Wikipedia',
     'pt': 'http://pt.wikipedia.org/wiki/Wikip%C3%A9dia',
     'ru': 'http://ru.wikipedia.org/wiki/%D0%92%D0%B8%D0%BA%D0%B8%D0%BF%D0%B5%D0%B4%D0%B8%D1%8F',  # noqa: E501
-#    u'zh': u'http://zh.wikipedia.org/wiki/Wikipedia',
 }
 
 html_folder = 'html'
 text_folder = 'paragraphs'
-short_text_folder = 'short_paragraphs'
 n_words_per_short_text = 5
 
 
@@ -40,10 +37,6 @@ for lang, page in pages.items():
     text_lang_folder = os.path.join(text_folder, lang)
     if not os.path.exists(text_lang_folder):
         os.makedirs(text_lang_folder)
-
-    short_text_lang_folder = os.path.join(short_text_folder, lang)
-    if not os.path.exists(short_text_lang_folder):
-        os.makedirs(short_text_lang_folder)
 
     opener = build_opener()
     html_filename = os.path.join(html_folder, lang + '.html')
@@ -77,26 +70,3 @@ for lang, page in pages.items():
         with open(text_filename, 'wb') as f:
             f.write(content.encode('utf-8', 'ignore'))
         i += 1
-
-        # split the paragraph into fake smaller paragraphs to make the
-        # problem harder e.g. more similar to tweets
-        if lang in ('zh', 'ja'):
-        # FIXME: whitespace tokenizing does not work on chinese and japanese
-            continue
-        words = content.split()
-        n_groups = len(words) / n_words_per_short_text
-        if n_groups < 1:
-            continue
-        groups = np.array_split(words, n_groups)
-
-        for group in groups:
-            small_content = " ".join(group)
-
-            short_text_filename = os.path.join(short_text_lang_folder,
-                                               '%s_%04d.txt' % (lang, j))
-            print("Writing %s" % short_text_filename)
-            with open(short_text_filename, 'wb') as f:
-                f.write(small_content.encode('utf-8', 'ignore'))
-            j += 1
-            if j >= 1000:
-                break
