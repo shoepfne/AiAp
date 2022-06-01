@@ -4,8 +4,7 @@ that represent sequences of up to 3 consecutive characters so as to be
 recognize natural languages by using the frequencies of short character
 sequences as 'fingerprints'.
 """
-# Author: Olivier Grisel <olivier.grisel@ensta.org>
-# License: Simplified BSD
+
 
 import sys
 
